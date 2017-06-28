@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/binding"
+	"mtest/controller"
 )
 
 func main() {
@@ -24,9 +26,10 @@ func main() {
 	m.Get("/index", func(r render.Render) {
 		r.HTML(200, "index", "jeremy")
 	})
-	m.Post("/handler", func(r render.Render) {
-		r.JSON(200, map[string]interface{}{"field": "value"})
-	})
+	//m.Post("/handler", func(r render.Render) {
+	//	r.JSON(200, map[string]interface{}{"field": "value"})
+	//})
+	m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
 	m.RunOnAddr(":8088")
 }
 
