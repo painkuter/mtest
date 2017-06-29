@@ -38,6 +38,9 @@ func main() {
 	m.Get("/index", func(r render.Render) {
 		r.HTML(200, "index", "jeremy")
 	})
+	m.Get("/login", func(r render.Render) {
+		r.HTML(200, "login", "jeremy")
+	})
 	//m.Post("/handler", func(r render.Render) {
 	//	r.JSON(200, map[string]interface{}{"field": "value"})
 	//})
@@ -64,7 +67,7 @@ func main() {
 			return
 		}
 	})
-	m.Get("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+	m.Post("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		r.HTML(200, "private", user.(*controller.UserAuth))
 	})
 	m.RunOnAddr(":8088")

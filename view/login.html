@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            $("#submit").click( function () {
+                $.ajax({
+                    url: '/auth',
+                    type: 'POST',
+                    data: {"login":"admin","pass":$("input[name=pass]").val()},
+                    dataType: "text",
+                    success: function (data, status) {
+                        $("html").append(data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        $("html").append("Handler not found: "+errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<input type="text" name="login">
+<input type="password" name="pass">
+<a href="#" id="submit">GO</a>
+</body>
+</html>
