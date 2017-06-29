@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"mtest/common/errors"
+
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
-	"golang.org/x/crypto/openpgp/errors"
 )
 
 const (
@@ -12,10 +13,10 @@ const (
 )
 
 type UserAuth struct {
-	ID            int    `form: "-"`
-	Name          string `form: "login"`
-	PassHash      string `form: "pass"`
-	authenticated bool   `form: "-"`
+	ID            int    `form:"-"`
+	Name          string `form:"login"`
+	PassHash      string `form:"pass"`
+	authenticated bool   `form:"-"`
 }
 
 func PrintUser(r render.Render) error {
@@ -41,7 +42,7 @@ func (u *UserAuth) Logout() {
 
 func (u *UserAuth) GetById(id interface{}) error {
 	if id != 1 {
-		return errors.ErrUnknownIssuer
+		return errors.New("No ID")
 	}
 	return nil
 }
@@ -52,4 +53,11 @@ func (u *UserAuth) IsAuthenticated() bool {
 
 func (u *UserAuth) UniqueId() interface{} {
 	return u.ID
+}
+
+func (u *UserAuth) CheckAuth() error {
+	if u.Name == admin && u.PassHash == pass {
+		return nil
+	}
+	return errors.New("Wrong pass/login")
 }

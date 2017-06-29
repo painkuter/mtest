@@ -2,6 +2,7 @@ package main
 
 import (
 	"mtest/controller"
+	"net/http"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -18,7 +19,7 @@ func main() {
 	})
 	m.Use(sessions.Sessions("my_session", store))
 	m.Use(sessionauth.SessionUser(controller.GenerateAnonymousUser))
-	sessionauth.RedirectUrl = "/new-login"
+	sessionauth.RedirectUrl = "/auth"
 	sessionauth.RedirectParam = "new-next"
 	m.Use(render.Renderer(render.Options{
 		Directory: "view", // Specify what path to load the templates from.
@@ -41,10 +42,35 @@ func main() {
 	//	r.JSON(200, map[string]interface{}{"field": "value"})
 	//})
 	m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
-	m.Post("/auth", binding.Bind(controller.UserAuth{}))
+	m.Post("/auth", binding.Bind(controller.UserAuth{}),
+		func(session sessions.Session, postedUser controller.UserAuth, r render.Render, req *http.Request) {
+		// You should verify credentials against a database or some other mechanism at this point.
+		// Then you can authenticate this session.
+		//r.JSON(200, map[string]interface{}{"field": "auth"})
+		user := controller.UserAuth{}
+		err := postedUser.CheckAuth()
+		if err != nil {
+			r.Redirect("/index")
+			return
+		} else {
+			err := sessionauth.AuthenticateSession(session, &user)
+			if err != nil {
+				r.JSON(500, err)
+			}
+
+			//params := req.URL.Query()
+			//redirect := params.Get(sessionauth.RedirectParam)
+			r.Redirect("/private")
+			return
+		}
+	})
+	m.Get("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+		r.HTML(200, "private", user.(*controller.UserAuth))
+	})
 	m.RunOnAddr(":8088")
 }
 
 //TODO: implement auth
 //TODO: implement sessions and sessionauth
+//TODO: +create login form
 //TODO: create makefile

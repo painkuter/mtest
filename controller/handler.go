@@ -10,6 +10,6 @@ type PostRequest struct {
 	Message string `form:"message"`
 }
 
-func Handler(req PostRequest,r render.Render) {
+func Handler(req PostRequest, r render.Render) {
 	r.JSON(200, map[string]interface{}{"field": req.Message})
 }
