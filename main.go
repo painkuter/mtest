@@ -4,6 +4,8 @@ import (
 	"mtest/controller"
 	"net/http"
 
+	"fmt"
+
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
@@ -47,28 +49,41 @@ func main() {
 	m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
 	m.Post("/auth", binding.Bind(controller.UserAuth{}),
 		func(session sessions.Session, postedUser controller.UserAuth, r render.Render, req *http.Request) {
-		// You should verify credentials against a database or some other mechanism at this point.
-		// Then you can authenticate this session.
-		//r.JSON(200, map[string]interface{}{"field": "auth"})
-		user := controller.UserAuth{}
-		err := postedUser.CheckAuth()
-		if err != nil {
-			r.Redirect("/index")
-			return
-		} else {
-			err := sessionauth.AuthenticateSession(session, &user)
+			fmt.Println("AUTH!!!")
+			// You should verify credentials against a database or some other mechanism at this point.
+			// Then you can authenticate this session.
+			//r.JSON(200, map[string]interface{}{"field": "auth"})
+			user := controller.UserAuth{}
+			err := postedUser.CheckAuth()
 			if err != nil {
-				r.JSON(500, err)
-			}
+				//wrong login/pass
+				fmt.Println("WRONG LOGIN")
+				r.Redirect("/user")
+				return
+			} else {
+				err := sessionauth.AuthenticateSession(session, &user)
+				if err != nil {
+					r.JSON(500, err)
+				}
 
-			//params := req.URL.Query()
-			//redirect := params.Get(sessionauth.RedirectParam)
-			r.Redirect("/private")
-			return
-		}
-	})
+				//params := req.URL.Query()
+				//redirect := params.Get(sessionauth.RedirectParam)
+				//r.Redirect(redirect)
+				r.Redirect("/user")
+				fmt.Println("RIGHT LOGIN")
+
+				return
+			}
+		})
 	m.Post("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		r.HTML(200, "private", user.(*controller.UserAuth))
+	})
+	m.Get("/private2", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+		r.HTML(200, "user", user.(*controller.UserAuth))
+	})
+	m.Get("/logout", sessionauth.LoginRequired, func(session sessions.Session, user sessionauth.User, r render.Render) {
+		sessionauth.Logout(session, user)
+		r.Redirect("/")
 	})
 	m.RunOnAddr(":8088")
 }

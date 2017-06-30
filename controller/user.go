@@ -41,9 +41,9 @@ func (u *UserAuth) Logout() {
 }
 
 func (u *UserAuth) GetById(id interface{}) error {
-	if id != 1 {
-		return errors.New("No ID")
-	}
+	//if id != 1 {
+	//	return errors.New("No ID")
+	//}
 	return nil
 }
 
