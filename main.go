@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"mtest/controller"
 	"net/http"
 
@@ -37,8 +38,13 @@ func main() {
 	m.Get("/", func() string {
 		return "Hello world!"
 	})
-	m.Get("/index", func(r render.Render) {
-		r.HTML(200, "index", "jeremy")
+	m.Get("/index", func(res http.ResponseWriter) {
+		//if user.IsAuthenticated(){
+		//
+		//}
+		t, _ := template.New("test").ParseFiles("view/test.html")
+		t.Execute(res, nil)
+		//r.HTML(200, "index", map[string]interface{}{"name": "wor1ld"})
 	})
 	m.Get("/login", func(r render.Render) {
 		r.HTML(200, "login", "jeremy")
@@ -54,14 +60,19 @@ func main() {
 			// Then you can authenticate this session.
 			//r.JSON(200, map[string]interface{}{"field": "auth"})
 			user := controller.UserAuth{}
-			err := postedUser.CheckAuth()
+			name, err := postedUser.CheckAuth()
+			user.Name = name
 			if err != nil {
 				//wrong login/pass
 				fmt.Println("WRONG LOGIN")
-				r.Redirect("/user")
+				//r.Redirect("/user")
+
+				r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
 				return
 			} else {
+				fmt.Println(user)
 				err := sessionauth.AuthenticateSession(session, &user)
+				fmt.Println(user)
 				if err != nil {
 					r.JSON(500, err)
 				}
@@ -78,7 +89,8 @@ func main() {
 	m.Post("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		r.HTML(200, "private", user.(*controller.UserAuth))
 	})
-	m.Get("/private2", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+		//fmt.Println(user.GetById())
 		r.HTML(200, "user", user.(*controller.UserAuth))
 	})
 	m.Get("/logout", sessionauth.LoginRequired, func(session sessions.Session, user sessionauth.User, r render.Render) {

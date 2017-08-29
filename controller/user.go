@@ -13,7 +13,7 @@ const (
 )
 
 type UserAuth struct {
-	ID            int    `form:"-"`
+	ID            int    `form:"id"`
 	Name          string `form:"login"`
 	PassHash      string `form:"pass"`
 	authenticated bool   `form:"-"`
@@ -31,6 +31,7 @@ func (u *UserAuth) Login() {
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
+	u.ID = 34
 	u.authenticated = true
 }
 
@@ -52,12 +53,13 @@ func (u *UserAuth) IsAuthenticated() bool {
 }
 
 func (u *UserAuth) UniqueId() interface{} {
-	return u.ID
+	//return u.ID
+	return 33
 }
 
-func (u *UserAuth) CheckAuth() error {
+func (u *UserAuth) CheckAuth() (string, error) {
 	if u.Name == admin && u.PassHash == pass {
-		return nil
+		return "ADMINKO", nil
 	}
-	return errors.New("Wrong pass/login")
+	return "", errors.New("Wrong pass/login")
 }
