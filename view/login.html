@@ -16,6 +16,8 @@
                     },
                     dataType: "text",
                     success: function (data, status) {
+                        //var response = $.parseJSON(data);
+
                         $("html").append(data);
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {

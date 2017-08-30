@@ -58,35 +58,23 @@ func main() {
 			fmt.Println("AUTH!!!")
 			// You should verify credentials against a database or some other mechanism at this point.
 			// Then you can authenticate this session.
-			//r.JSON(200, map[string]interface{}{"field": "auth"})
 			user := controller.UserAuth{}
 			name, err := postedUser.CheckAuth()
 			user.Name = name
 			if err != nil {
-				//wrong login/pass
-				fmt.Println("WRONG LOGIN")
-				//r.Redirect("/user")
-
-				r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
+				r.JSON(200, map[string]interface{}{"response":"wrong login/password"})
 				return
 			} else {
-				fmt.Println(user)
+
 				err := sessionauth.AuthenticateSession(session, &user)
-				fmt.Println(user)
 				if err != nil {
 					r.JSON(500, err)
 				}
-
-				//params := req.URL.Query()
-				//redirect := params.Get(sessionauth.RedirectParam)
-				//r.Redirect(redirect)
-				r.Redirect("/user")
-				fmt.Println("RIGHT LOGIN")
-
+				r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
 				return
 			}
 		})
-	m.Post("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
+	m.Get("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		r.HTML(200, "private", user.(*controller.UserAuth))
 	})
 	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
@@ -99,8 +87,3 @@ func main() {
 	})
 	m.RunOnAddr(":8088")
 }
-
-//TODO: implement auth
-//TODO: implement sessions and sessionauth
-//TODO: +create login form
-//TODO: create makefile

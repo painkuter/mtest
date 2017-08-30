@@ -5,6 +5,7 @@ import (
 
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
+	"fmt"
 )
 
 const (
@@ -31,6 +32,7 @@ func (u *UserAuth) Login() {
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
+	fmt.Print("LOGIN!!!")
 	u.ID = 34
 	u.authenticated = true
 }
@@ -49,7 +51,10 @@ func (u *UserAuth) GetById(id interface{}) error {
 }
 
 func (u *UserAuth) IsAuthenticated() bool {
+	fmt.Print("USER: ")
+	fmt.Println(u)
 	return u.authenticated
+	//return true
 }
 
 func (u *UserAuth) UniqueId() interface{} {
