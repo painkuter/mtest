@@ -1,7 +1,7 @@
 package main
 
 import (
-	"html/template"
+	//"html/template"
 	"mtest/controller"
 	"net/http"
 
@@ -27,7 +27,8 @@ func main() {
 	m.Use(render.Renderer(render.Options{
 		Directory: "view", // Specify what path to load the templates from.
 		//Layout:     "layout",                   // Specify a layout template. Layouts can call {{ yield }} to render the current template.
-		Extensions: []string{".html"}, // Specify extensions to load for templates.
+		Extensions: []string{".tmpl", ".html"}, // Specify extensions to load for templates.
+		//Extensions: []string{".html"}, // Specify extensions to load for templates.
 		//Funcs:           []template.FuncMap{AppHelpers}, // Specify helper function maps for templates to access.
 		//Delims:          render.Delims{"{[{", "}]}"}, // Sets delimiters to the specified strings.
 		Charset:    "UTF-8", // Sets encoding for json and html content-types. Default is "UTF-8".
@@ -35,19 +36,19 @@ func main() {
 		IndentXML:  true,    // Output human readable XML
 		//HTMLContentType: "application/xhtml+xml",     // Output XHTML content type instead of default "text/html"
 	}))
-	m.Get("/", func() string {
-		return "Hello world!"
+	m.Get("/", func(r render.Render) {
+		r.Redirect("/index")
 	})
-	m.Get("/index", func(res http.ResponseWriter) {
+	m.Get("/index", func( /*res http.ResponseWriter*/ r render.Render) {
 		//if user.IsAuthenticated(){
 		//
 		//}
-		t, _ := template.New("test").ParseFiles("view/test.html")
-		t.Execute(res, nil)
-		//r.HTML(200, "index", map[string]interface{}{"name": "wor1ld"})
+		//t, _ := template.New("test").ParseFiles("view/test.html")
+		//t.Execute(res, nil)
+		r.HTML(200, "index", map[string]interface{}{"name": "wor1ld"})
 	})
 	m.Get("/login", func(r render.Render) {
-		r.HTML(200, "login", "jeremy")
+		r.HTML(200, "login", nil)
 	})
 	//m.Post("/handler", func(r render.Render) {
 	//	r.JSON(200, map[string]interface{}{"field": "value"})
@@ -62,7 +63,7 @@ func main() {
 			name, err := postedUser.CheckAuth()
 			user.Name = name
 			if err != nil {
-				r.JSON(200, map[string]interface{}{"response":"wrong login/password"})
+				r.JSON(200, map[string]interface{}{"response": "wrong login/password"})
 				return
 			} else {
 
