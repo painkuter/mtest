@@ -6,6 +6,7 @@ use \r\n
 
 **TODO:**
 
+[BACK]
 0. implement auth +/-
 0. implement sessions and sessionauth +/-
 0. use templates +
@@ -26,6 +27,10 @@ use \r\n
     Main header
 + footer?
 10. user profile
+
+[FRONT]
+
+* use google jquery and bootstrap
 
 json <-> go.map
 json <->js.obj

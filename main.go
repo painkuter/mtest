@@ -39,6 +39,7 @@ func main() {
 	m.Get("/", func(r render.Render) {
 		r.Redirect("/index")
 	})
+	// A martini.Classic() instance automatically serves static files from the "public" directory in the root of your server.
 	m.Get("/index", func( /*res http.ResponseWriter*/ r render.Render) {
 		//if user.IsAuthenticated(){
 		//
