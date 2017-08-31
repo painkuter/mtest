@@ -6,6 +6,7 @@ import (
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -32,8 +33,9 @@ func (u *UserAuth) Login() {
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
-	fmt.Print("LOGIN!!!")
+
 	u.ID = 34
+	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
 	u.authenticated = true
 }
 
