@@ -41,19 +41,9 @@ func main() {
 	})
 	// A martini.Classic() instance automatically serves static files from the "public" directory in the root of your server.
 	m.Get("/index", func( /*res http.ResponseWriter*/ r render.Render) {
-		//if user.IsAuthenticated(){
-		//
-		//}
-		//t, _ := template.New("test").ParseFiles("view/test.html")
-		//t.Execute(res, nil)
 		r.HTML(200, "index", map[string]interface{}{"name": "wor1ld"})
 	})
-	m.Get("/login", func(r render.Render) {
-		r.HTML(200, "login", nil)
-	})
-	//m.Post("/handler", func(r render.Render) {
-	//	r.JSON(200, map[string]interface{}{"field": "value"})
-	//})
+	m.Get("/login", func(r render.Render) { r.HTML(200, "login", nil) })
 	m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
 	m.Post("/auth", binding.Bind(controller.UserAuth{}),
 		func(session sessions.Session, postedUser controller.UserAuth, r render.Render, req *http.Request) {
@@ -80,7 +70,6 @@ func main() {
 		r.HTML(200, "private", user.(*controller.UserAuth))
 	})
 	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
-		//fmt.Println(user.GetById())
 		r.HTML(200, "user", user.(*controller.UserAuth))
 	})
 	m.Get("/logout", sessionauth.LoginRequired, func(session sessions.Session, user sessionauth.User, r render.Render) {
