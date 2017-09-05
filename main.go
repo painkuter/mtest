@@ -36,16 +36,22 @@ func main() {
 		IndentXML:  true,    // Output human readable XML
 		//HTMLContentType: "application/xhtml+xml",     // Output XHTML content type instead of default "text/html"
 	}))
+
+	//ROUTES
 	m.Get("/", func(r render.Render) {
 		r.Redirect("/index")
 	})
 	// A martini.Classic() instance automatically serves static files from the "public" directory in the root of your server.
-	m.Get("/index", func( /*res http.ResponseWriter*/ r render.Render) {
-		r.HTML(200, "index", map[string]interface{}{"name": "wor1ld"})
+	m.Get("/index", func(session sessions.Session, user sessionauth.User, r render.Render) {
+		response := map[string]interface{}{"name": "wor1ld"}
+		if user.IsAuthenticated() {
+			response["isAuthenticated"] = true
+		}
+		r.HTML(200, "index", response)
 	})
-	m.Get("/login", func(r render.Render) { r.HTML(200, "login", nil) })
-	m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
-	m.Post("/auth", binding.Bind(controller.UserAuth{}),
+	//m.Get("/login", func(r render.Render) { r.HTML(200, "login", nil) })
+	//m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
+	m.Post("/login", binding.Bind(controller.UserAuth{}),
 		func(session sessions.Session, postedUser controller.UserAuth, r render.Render, req *http.Request) {
 			fmt.Println("AUTH!!!")
 			// You should verify credentials against a database or some other mechanism at this point.
@@ -62,7 +68,8 @@ func main() {
 				if err != nil {
 					r.JSON(500, err)
 				}
-				r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
+				//r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
+				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "time": "10-00"})
 				return
 			}
 		})

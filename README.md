@@ -13,8 +13,6 @@ use \r\n
 0. +create login form
 0. create makefile
 
-0. js var_dump
-0. js  JSON response writer
 0. move POST to JSON response
 
 0. redirect unauthorized to LOGIN page
@@ -31,6 +29,9 @@ use \r\n
 [FRONT]
 
 * use google jquery and bootstrap
+* add forms validation
+* js var_dump
+* js  JSON response writer
 
 json <-> go.map
 json <->js.obj

@@ -3,20 +3,25 @@ package controller
 import (
 	"mtest/common/errors"
 
-	"github.com/martini-contrib/render"
-	"github.com/martini-contrib/sessionauth"
 	"fmt"
 	"strconv"
+
+	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/sessionauth"
 )
 
 const (
-	admin = "admin"
-	pass  = "1234"
+	admin       = "admin"
+	pass        = "1234"
+	name        = "Istribitelko"
+	id          = 272
+	last_access = "yesterday"
 )
 
 type UserAuth struct {
 	ID            int    `form:"id"`
-	Name          string `form:"login"`
+	UserLogin     string `form:"login"`
+	Name          string `form:"name"`
 	PassHash      string `form:"pass"`
 	authenticated bool   `form:"-"`
 }
@@ -34,7 +39,7 @@ func (u *UserAuth) Login() {
 	// Add to logged-in user's list
 	// etc ...
 
-	u.ID = 34
+	u.ID = id
 	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
 	u.authenticated = true
 }
@@ -65,7 +70,7 @@ func (u *UserAuth) UniqueId() interface{} {
 }
 
 func (u *UserAuth) CheckAuth() (string, error) {
-	if u.Name == admin && u.PassHash == pass {
+	if u.UserLogin == admin && u.PassHash == pass {
 		return "ADMINKO", nil
 	}
 	return "", errors.New("Wrong pass/login")
