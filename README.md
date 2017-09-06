@@ -7,6 +7,7 @@ use \r\n
 **TODO:**
 
 [BACK]
+* gorm
 0. implement auth +/-
 0. implement sessions and sessionauth +/-
 0. use templates +
@@ -32,9 +33,10 @@ use \r\n
 * add forms validation
 * js var_dump
 * js  JSON response writer
-* $.cookie
-* set user to cookie
-* get user from cookie
+* $.cookie +
+* set user to cookie +
+* get user from cookie +
+* use json for cookie
 
 json <-> go.map
 json <->js.obj

@@ -44,7 +44,6 @@ func main() {
 		response := map[string]interface{}{}
 		if user.IsAuthenticated() {
 			response["isAuthenticated"] = true
-			//response["name"] =
 		}
 		r.HTML(200, "index", response)
 	})
@@ -65,7 +64,7 @@ func main() {
 				if err != nil {
 					r.JSON(500, err)
 				}
-				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "time": user.LastAccess})
+				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "last_access": user.LastAccess})
 				return
 			}
 		})
@@ -78,6 +77,10 @@ func main() {
 	m.Get("/logout", sessionauth.LoginRequired, func(session sessions.Session, user sessionauth.User, r render.Render) {
 		sessionauth.Logout(session, user)
 		r.Redirect("/")
+	})
+	m.NotFound(func(r render.Render) {
+		// handle 404
+		r.HTML(404, "errors/404", nil)
 	})
 	m.RunOnAddr(":8088")
 }
