@@ -23,6 +23,7 @@ type UserAuth struct {
 	UserLogin     string `form:"login"`
 	Name          string `form:"name"`
 	PassHash      string `form:"pass"`
+	LastAccess    string `form:"pass"`
 	authenticated bool   `form:"-"`
 }
 
@@ -38,7 +39,8 @@ func (u *UserAuth) Login() {
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
-
+	u.LastAccess = last_access
+	u.Name = name
 	u.ID = id
 	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
 	u.authenticated = true
@@ -65,11 +67,11 @@ func (u *UserAuth) IsAuthenticated() bool {
 }
 
 func (u *UserAuth) UniqueId() interface{} {
-	//return u.ID
-	return 33
+	return u.ID
 }
 
 func (u *UserAuth) CheckAuth() (string, error) {
+
 	if u.UserLogin == admin && u.PassHash == pass {
 		return "ADMINKO", nil
 	}

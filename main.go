@@ -5,8 +5,6 @@ import (
 	"mtest/controller"
 	"net/http"
 
-	"fmt"
-
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
@@ -43,9 +41,10 @@ func main() {
 	})
 	// A martini.Classic() instance automatically serves static files from the "public" directory in the root of your server.
 	m.Get("/index", func(session sessions.Session, user sessionauth.User, r render.Render) {
-		response := map[string]interface{}{"name": "wor1ld"}
+		response := map[string]interface{}{}
 		if user.IsAuthenticated() {
 			response["isAuthenticated"] = true
+			//response["name"] =
 		}
 		r.HTML(200, "index", response)
 	})
@@ -53,23 +52,20 @@ func main() {
 	//m.Post("/handler", binding.Bind(controller.PostRequest{}), controller.Handler)
 	m.Post("/login", binding.Bind(controller.UserAuth{}),
 		func(session sessions.Session, postedUser controller.UserAuth, r render.Render, req *http.Request) {
-			fmt.Println("AUTH!!!")
 			// You should verify credentials against a database or some other mechanism at this point.
 			// Then you can authenticate this session.
 			user := controller.UserAuth{}
-			name, err := postedUser.CheckAuth()
-			user.Name = name
+			_, err := postedUser.CheckAuth()
+			user = postedUser
 			if err != nil {
 				r.JSON(200, map[string]interface{}{"response": "wrong login/password"})
 				return
 			} else {
-
 				err := sessionauth.AuthenticateSession(session, &user)
 				if err != nil {
 					r.JSON(500, err)
 				}
-				//r.HTML(200, "logged-in", map[string]interface{}{"name": user.Name, "time": "10-00"})
-				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "time": "10-00"})
+				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "time": user.LastAccess})
 				return
 			}
 		})

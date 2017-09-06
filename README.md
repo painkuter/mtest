@@ -32,6 +32,9 @@ use \r\n
 * add forms validation
 * js var_dump
 * js  JSON response writer
+* $.cookie
+* set user to cookie
+* get user from cookie
 
 json <-> go.map
 json <->js.obj
