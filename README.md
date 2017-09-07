@@ -7,12 +7,15 @@ use \r\n
 **TODO:**
 
 [BACK]
+* implement TRUE closing app: save db to file
+* system errors logging
+* db connection
 * gorm
-0. implement auth +/-
-0. implement sessions and sessionauth +/-
-0. use templates +
-0. +create login form
-0. create makefile
+* implement auth +/-
+* implement sessions and sessionauth +/-
+* use templates +
+
+* create makefile
 
 0. move POST to JSON response
 
@@ -28,7 +31,7 @@ use \r\n
 10. user profile
 
 [FRONT]
-
+* create login form
 * use google jquery and bootstrap
 * add forms validation
 * js var_dump

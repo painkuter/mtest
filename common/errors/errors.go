@@ -291,3 +291,7 @@ func IsError(err, errConst error) bool {
 	}
 	return rootErrStr == errConstStr
 }
+
+func CheckErr(err error) {
+
+}
