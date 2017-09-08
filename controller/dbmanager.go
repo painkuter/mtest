@@ -1,4 +1,4 @@
-package service
+package controller
 
 import (
 	"fmt"
@@ -8,7 +8,14 @@ import (
 
 	"database/sql"
 	"io/ioutil"
+	"mtest/common/errors"
 )
+
+const (
+	connect1 = "root:12345678@tcp(127.0.0.1:3306)/"
+	connect2 = "root:111@tcp(127.0.0.1:3306)/"
+)
+
 
 func TestGorp() {
 	initDb()
@@ -49,10 +56,20 @@ func initDb() *gorp.DbMap {
 }
 
 func createAndOpen(name string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:12345678@tcp(127.0.0.1:3306)/")
+	var dbConnect string
+
+	db, err := sql.Open("mysql", connect2)
 	if err != nil {
+		db, err = sql.Open("mysql", connect1)
+		if err != nil {
+			return nil, errors.Wrapf(err, "Error connecting to DB")
+		}
+		fmt.Println("Connected to [1]:" + connect1)
+		dbConnect = connect1
 		// panic(err)
-		// return nil, err
+	} else {
+		fmt.Println("Connected to [2]:" + connect2)
+		dbConnect = connect2
 	}
 	// defer db.Close()
 
@@ -62,15 +79,18 @@ func createAndOpen(name string) (*sql.DB, error) {
 	}
 	// db.Close()
 
-	db, err = sql.Open("mysql", "root:12345678@tcp(127.0.0.1:3306)/"+name)
+	db, err = sql.Open("mysql", dbConnect+name)
 	if err != nil {
 		// panic(err)
+	}
+	if _, err := db.Exec("SET FOREIGN_KEY_CHECKS=0"); err != nil {
+		return nil, err
 	}
 	_, err = db.Exec(getMySQL())
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	db.Exec("SET FOREIGN_KEY_CHECKS=1")
 	// defer db.Close()
 	return db, err
 }

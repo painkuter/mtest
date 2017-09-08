@@ -10,11 +10,10 @@ import (
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
-	"mtest/service"
 )
 
 func main() {
-	service.TestGorp()
+	controller.TestGorp()
 	m := martini.Classic()
 	store := sessions.NewCookieStore([]byte("secret123"))
 	store.Options(sessions.Options{
