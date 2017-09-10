@@ -1,6 +1,3 @@
-/**
- * Created by Serj on 30.08.2017.
- */
 //File including to all html pages, containing main functions
 
 // print_r: array -> string

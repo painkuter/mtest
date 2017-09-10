@@ -9,7 +9,7 @@ use \r\n
 [BACK]
 * implement TRUE closing app: save db to file
 * system errors logging
-* db connection
+* db connection +
 * gorm
 * implement auth +/-
 * implement sessions and sessionauth +/-
@@ -45,3 +45,5 @@ json <-> go.map
 json <->js.obj
 
 https://github.com/codegangsta/martini-contrib/tree/master/sessionauth/example
+
+https://jqueryvalidation.org/
