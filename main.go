@@ -10,6 +10,7 @@ import (
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
+	"mtest/common/errors"
 )
 
 func main() {
@@ -68,6 +69,17 @@ func main() {
 				r.JSON(200, map[string]interface{}{"response": "ok", "name": user.Name, "last_access": user.LastAccess})
 				return
 			}
+		})
+	m.Post("/signup", binding.Bind(controller.UserSignUp{}),
+		func(newUser controller.UserSignUp, r render.Render, req *http.Request) {
+			// Check and save new user to database
+			if newUser.Login == "" || newUser.PassHash == "" {
+				r.JSON(400, errors.New("Wrong login/password"))
+				return
+			}
+
+			r.JSON(200, newUser)
+			//r.JSON(200, map[string]interface{}{"response": "ok"})
 		})
 	m.Get("/private", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		r.HTML(200, "private", user.(*controller.UserAuth))

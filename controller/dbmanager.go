@@ -17,7 +17,7 @@ const (
 )
 
 
-func TestGorp() {
+func TestGorp()  {
 	initDb()
 	//getMySQL()
 }

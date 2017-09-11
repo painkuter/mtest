@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 )
 
@@ -23,12 +22,17 @@ type UserAuth struct {
 	UserLogin     string `form:"login"`
 	Name          string `form:"name"`
 	PassHash      string `form:"pass"`
-	LastAccess    string `form:"pass"`
+	LastAccess    string `form:"last_access"`
 	authenticated bool   `form:"-"`
 }
 
-func PrintUser(r render.Render) error {
-	return nil
+type UserSignUp struct {
+	Login    string `form:"login"`
+	PassHash string `form:"pass"`
+}
+
+func (u UserSignUp) SaveUser()  {
+
 }
 
 func GenerateAnonymousUser() sessionauth.User {

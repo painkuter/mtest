@@ -44,6 +44,7 @@ use \r\n
 json <-> go.map
 json <->js.obj
 
-https://github.com/codegangsta/martini-contrib/tree/master/sessionauth/example
 
+https://github.com/codegangsta/martini-contrib/tree/master/sessionauth/example
+validation:
 https://jqueryvalidation.org/
