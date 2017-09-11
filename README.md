@@ -14,6 +14,7 @@ use \r\n
 * implement auth +/-
 * implement sessions and sessionauth +/-
 * use templates +
+* fix sql file
 
 * create makefile
 
@@ -44,7 +45,9 @@ use \r\n
 json <-> go.map
 json <->js.obj
 
-
+sessions:
 https://github.com/codegangsta/martini-contrib/tree/master/sessionauth/example
+gorp:
+https://github.com/go-gorp/gorp
 validation:
 https://jqueryvalidation.org/

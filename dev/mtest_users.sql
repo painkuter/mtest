@@ -6,5 +6,6 @@ CREATE TABLE users
     name VARCHAR(300) NOT NULL,
     last_access INT(11)
 );
-CREATE UNIQUE INDEX users_id_uindex ON users (id);
-CREATE UNIQUE INDEX users_login_uindex ON users (login);
+#fix it
+#CREATE UNIQUE INDEX users_id_uindex ON users (id);
+#CREATE UNIQUE INDEX users_login_uindex ON users (login);

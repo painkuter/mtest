@@ -18,11 +18,11 @@ const (
 )
 
 type UserAuth struct {
-	ID            int    `form:"id"`
-	UserLogin     string `form:"login"`
-	Name          string `form:"name"`
-	PassHash      string `form:"pass"`
-	LastAccess    string `form:"last_access"`
+	ID            int    `form:"id" db:"id_user"`
+	UserLogin     string `form:"login" db:"user_login"`
+	Name          string `form:"name" db:"user_name"`
+	PassHash      string `form:"pass" db:"user_pass"`
+	LastAccess    string `form:"last_access" db:"user_last_access"`
 	authenticated bool   `form:"-"`
 }
 
@@ -31,7 +31,7 @@ type UserSignUp struct {
 	PassHash string `form:"pass"`
 }
 
-func (u UserSignUp) SaveUser()  {
+func (u UserSignUp) SaveUser() {
 
 }
 
