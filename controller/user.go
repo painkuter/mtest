@@ -23,7 +23,15 @@ type UserAuth struct {
 	Name          string `form:"name" db:"user_name"`
 	PassHash      string `form:"pass" db:"user_pass"`
 	LastAccess    string `form:"last_access" db:"user_last_access"`
-	authenticated bool   `form:"-"`
+	authenticated bool   `form:"-" db:"-"`
+}
+
+type User struct {
+	ID            int    `form:"id" db:"id_user"`
+	UserLogin     string `form:"login" db:"user_login"`
+	Name          string `form:"name" db:"user_name"`
+	PassHash      string `form:"pass" db:"user_pass"`
+	LastAccess    string `form:"last_access" db:"user_last_access"`
 }
 
 type UserSignUp struct {
