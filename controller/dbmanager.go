@@ -14,7 +14,9 @@ import (
 const (
 	connect1 = "root:12345678@tcp(127.0.0.1:3306)/"
 	connect2 = "root:111@tcp(127.0.0.1:3306)/"
+	connect3 = "root@tcp(127.0.0.1:3306)/"
 )
+
 // Set and test connection
 // Execute mysql dump
 // Setup structs
@@ -37,6 +39,8 @@ func initDb() *gorp.DbMap {
 		fmt.Printf("ERROR create and open db: %s \n", err)
 		//return nil
 	}
+	fmt.Println("Trying to set mysql dump")
+	_, err = db.Exec(getMySQL())
 	//checkErr(err, "sql.Open failed")
 	fmt.Println("Getting DBmap")
 	// construct a gorp DbMap
@@ -49,13 +53,15 @@ func initDb() *gorp.DbMap {
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())
 	}
-	dbmap.Exec("DROP TABLE IF EXISTS users2")
-	table := dbmap.AddTableWithName(UserAuth{}, "users2")
+	//dbmap.Exec("DROP TABLE IF EXISTS user")
+	table := dbmap.AddTableWithName(UserAuth{}, "user") //.AddIndex("UserLogin")
+	table.ColMap("UserLogin")
 	dbmap.CreateTablesIfNotExists()
 	if table == nil {
 		fmt.Println("Empty table pointer")
 	}
 	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", UserLogin: "Login"})
+	err = dbmap.Insert(&UserAuth{Name: "TestName2", LastAccess: "yesterday", UserLogin: "Login2"})
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())
 	}
@@ -71,47 +77,51 @@ func initDb() *gorp.DbMap {
 	return dbmap
 }
 
-func createAndOpen(name string) (*sql.DB, error) {
-	var dbConnect string
-
-	db, err := sql.Open("mysql", connect2)
-	if err != nil {
-		fmt.Println("Trying to connect to next connection")
-		db, err = sql.Open("mysql", connect1)
-		if err != nil {
-			return nil, errors.Wrapf(err, "Error connecting to DB")
+func createAndOpen(dbNname string) (*sql.DB, error) {
+	var (
+		dbConnect string
+		db        *sql.DB
+		err       error
+	)
+	connections := []string{connect1, connect2, connect3}
+	for _, el := range connections {
+		db, err = sql.Open("mysql", el)
+		if err == nil {
+			fmt.Println("CONNECTED TO DB-SERVER " + el)
+			dbConnect = el
+			break
 		}
-		fmt.Println("Connected to [1]:" + connect1)
-		dbConnect = connect1
-		// panic(err)
-	} else {
-		fmt.Println("Connected to [2]:" + connect2)
-		dbConnect = connect2
 	}
+	if err != nil {
+		return nil, errors.Wrap(err, "ERROR no connection")
+	}
+
 	// defer db.Close()
 	fmt.Println("Creating database if not exists")
-	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS " + name)
+	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS " + dbNname)
 	if err != nil {
-		fmt.Printf("Err creating db: %s", err)
+		fmt.Printf("ERROR creating db: %s", err)
 		err = nil
 		// panic(err)
 	}
 	db.Close()
 	fmt.Println("Update connect -> directly use selected database " + dbConnect)
-	db, err = sql.Open("mysql", dbConnect+name)
+	db, err = sql.Open("mysql", dbConnect+dbNname)
 	if err != nil {
 		fmt.Printf("ERROR openning new connection to database: %s", err)
 		// panic(err)
-	} /*
+	}
+	/*
 		if _, err := db.Exec("SET FOREIGN_KEY_CHECKS=0"); err != nil {
 			return nil, errors.Wrapf(err, "Error setting fk")
 		}*/
-	fmt.Println("Trying to set mysql dump")
-	_, err = db.Exec(getMySQL())
 	if err != nil {
-		fmt.Println(err)
+		//fmt.Println(err)
+		fmt.Println("Initialization finished with errors")
+	} else {
+		fmt.Println("Initialization finished successfully")
 	}
-	fmt.Println("Initialization finished")
+
 	//db.Exec("SET FOREIGN_KEY_CHECKS=1")
 	// defer db.Close()
 	return db, err

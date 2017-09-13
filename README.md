@@ -7,6 +7,7 @@ use \r\n
 **TODO:**
 
 [BACK]
+* logging with string number
 * implement TRUE closing app: save db to file
 * system errors logging
 * db connection +
@@ -49,5 +50,6 @@ sessions:
 https://github.com/codegangsta/martini-contrib/tree/master/sessionauth/example
 gorp:
 https://github.com/go-gorp/gorp
+https://godoc.org/gopkg.in/gorp.v1#ColumnMap
 validation:
 https://jqueryvalidation.org/
