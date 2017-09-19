@@ -54,14 +54,17 @@ func initDb() *gorp.DbMap {
 		fmt.Println("ERROR: try insert: ", err.Error())
 	}
 	//dbmap.Exec("DROP TABLE IF EXISTS user")
-	table := dbmap.AddTableWithName(UserAuth{}, "user") //.AddIndex("UserLogin")
-	table.ColMap("UserLogin")
+	table := dbmap.AddTableWithName(UserAuth{}, "user") //.AddIndex("user_id_uindex", "Btree", []string{"UserLogin"}).SetUnique(true)
+	table.ColMap("UserLogin").SetUnique(true)
+	//table.IdxMap()
+	//table.IdxMap("UserLogin").Unique = true
 	dbmap.CreateTablesIfNotExists()
 	if table == nil {
 		fmt.Println("Empty table pointer")
 	}
+	//table.AddIndex("user_id_uindex", "Btree", []string{"UserLogin"}).SetUnique(true)
 	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", UserLogin: "Login"})
-	err = dbmap.Insert(&UserAuth{Name: "TestName2", LastAccess: "yesterday", UserLogin: "Login2"})
+	//err = dbmap.Insert(&UserAuth{Name: "TestName2", LastAccess: "yesterday", UserLogin: "Login2"})
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())
 	}

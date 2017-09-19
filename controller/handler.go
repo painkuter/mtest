@@ -2,6 +2,7 @@ package controller
 
 import (
 	//"github.com/martini-contrib/binding"
+
 	"github.com/martini-contrib/render"
 )
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/go-gorp/gorp"
 	"github.com/martini-contrib/sessionauth"
 )
 
@@ -26,21 +27,21 @@ type UserAuth struct {
 	authenticated bool   `form:"-" db:"-"`
 }
 
-/*type User struct {
-	ID            int    `form:"id" db:"id_user"`
-	UserLogin     string `form:"login" db:"user_login"`
-	Name          string `form:"name" db:"user_name"`
-	PassHash      string `form:"pass" db:"user_pass"`
-	LastAccess    string `form:"last_access" db:"user_last_access"`
-}*/
-
 type UserSignUp struct {
 	Login    string `form:"login"`
 	PassHash string `form:"pass"`
 }
 
-func (u UserSignUp) SaveUser() {
+/*func (u UserSignUp) SaveUser() {
 
+}*/
+func (u UserSignUp) SaveUser(db *gorp.DbMap) error {
+	fmt.Println("Saving user")
+	err := db.Insert(&UserAuth{
+		UserLogin: u.Login,
+		PassHash:  u.PassHash,
+	})
+	return err
 }
 
 func GenerateAnonymousUser() sessionauth.User {

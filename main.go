@@ -78,7 +78,10 @@ func main() {
 				r.JSON(400, errors.New("Wrong login/password"))
 				return
 			}
-			db.Insert()
+			err := newUser.SaveUser(db)
+			if err != nil {
+				r.JSON(400, err)
+			}
 			r.JSON(200, newUser)
 			//r.JSON(200, map[string]interface{}{"response": "ok"})
 		})

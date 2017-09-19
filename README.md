@@ -7,11 +7,17 @@ use \r\n
 **TODO:**
 
 [BACK]
-* logging with string number
+-
+* Add indexes and keys
+
+LOGGING
+* -logging with string number ->
+* -system errors logging
+
 * implement TRUE closing app: save db to file
-* system errors logging
+
 * db connection +
-* gorm
+* gorm +/-
 * implement auth +/-
 * implement sessions and sessionauth +/-
 * use templates +
@@ -53,3 +59,5 @@ https://github.com/go-gorp/gorp
 https://godoc.org/gopkg.in/gorp.v1#ColumnMap
 validation:
 https://jqueryvalidation.org/
+cookie:
+https://github.com/carhartl/jquery-cookie
