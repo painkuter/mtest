@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"time"
+
 	"github.com/go-gorp/gorp"
 	"github.com/martini-contrib/sessionauth"
 )
@@ -19,12 +21,14 @@ const (
 )
 
 type UserAuth struct {
-	ID            int    `form:"id" db:"id_user,primarykey,autoincrement"`
-	UserLogin     string `form:"login" db:",size:50"`
-	Name          string `form:"name" db:",size:300"`
-	PassHash      string `form:"pass" db:",size:300"`
-	LastAccess    string `form:"last_access"`
-	authenticated bool   `form:"-" db:"-"`
+	ID            int       `form:"id" db:"id_user,primarykey,autoincrement"`
+	UserLogin     string    `form:"login" db:",size:50"`
+	Email         string    `form:"email" db:",size:100"`
+	Name          string    `form:"name" db:",size:300"`
+	PassHash      string    `form:"pass" db:",size:300"`
+	CreatedAt     time.Time `form:"-" db:""`
+	LastAccess    string    `form:"last_access"`
+	authenticated bool      `form:"-" db:"-"`
 }
 
 type UserSignUp struct {
@@ -32,14 +36,12 @@ type UserSignUp struct {
 	PassHash string `form:"pass"`
 }
 
-/*func (u UserSignUp) SaveUser() {
-
-}*/
 func (u UserSignUp) SaveUser(db *gorp.DbMap) error {
 	fmt.Println("Saving user")
 	err := db.Insert(&UserAuth{
 		UserLogin: u.Login,
 		PassHash:  u.PassHash,
+		CreatedAt: time.Now(),
 	})
 	return err
 }

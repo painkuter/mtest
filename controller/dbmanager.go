@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	connect1 = "root:12345678@tcp(127.0.0.1:3306)/"
-	connect2 = "root:111@tcp(127.0.0.1:3306)/"
+	connect2 = "root:12345678@tcp(127.0.0.1:3306)/"
+	connect1 = "root:111@tcp(127.0.0.1:3306)/"
 	connect3 = "root@tcp(127.0.0.1:3306)/"
+	connect4 = "root:111@localhost/"
 )
 
 // Set and test connection
@@ -53,11 +54,14 @@ func initDb() *gorp.DbMap {
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())
 	}
-	//dbmap.Exec("DROP TABLE IF EXISTS user")
-	table := dbmap.AddTableWithName(UserAuth{}, "user") //.AddIndex("user_id_uindex", "Btree", []string{"UserLogin"}).SetUnique(true)
+
+	dbmap.Exec("DROP TABLE IF EXISTS user")
+
+	table := dbmap.AddTableWithName(UserAuth{}, "user")
 	table.ColMap("UserLogin").SetUnique(true)
-	//table.IdxMap()
-	//table.IdxMap("UserLogin").Unique = true
+	//Add after email in form and validation
+	//table.ColMap("Email").SetUnique(true)
+
 	dbmap.CreateTablesIfNotExists()
 	if table == nil {
 		fmt.Println("Empty table pointer")
@@ -86,7 +90,7 @@ func createAndOpen(dbNname string) (*sql.DB, error) {
 		db        *sql.DB
 		err       error
 	)
-	connections := []string{connect1, connect2, connect3}
+	connections := []string{connect1, connect2, connect3, connect4}
 	for _, el := range connections {
 		db, err = sql.Open("mysql", el)
 		if err == nil {

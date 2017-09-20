@@ -80,7 +80,7 @@ func main() {
 			}
 			err := newUser.SaveUser(db)
 			if err != nil {
-				r.JSON(400, err)
+				r.JSON(200, err)
 			}
 			r.JSON(200, newUser)
 			//r.JSON(200, map[string]interface{}{"response": "ok"})
