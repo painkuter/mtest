@@ -8,7 +8,8 @@ use \r\n
 
 [BACK]
 -
-* Add indexes and keys
+* Add indexes and keys +
+* Add queryBuilder
 
 LOGGING
 * -logging with string number ->

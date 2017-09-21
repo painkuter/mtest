@@ -22,8 +22,10 @@ const (
 // Execute mysql dump
 // Setup structs
 
+var DB = initDb()
+
 func TestGorp() *gorp.DbMap {
-	return initDb()
+	return DB
 	//getMySQL()
 }
 func getMySQL() string {
@@ -67,7 +69,7 @@ func initDb() *gorp.DbMap {
 		fmt.Println("Empty table pointer")
 	}
 	//table.AddIndex("user_id_uindex", "Btree", []string{"UserLogin"}).SetUnique(true)
-	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", UserLogin: "Login"})
+	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", UserLogin: "admin", PassHash: "1234"})
 	//err = dbmap.Insert(&UserAuth{Name: "TestName2", LastAccess: "yesterday", UserLogin: "Login2"})
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())

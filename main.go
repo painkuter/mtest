@@ -59,7 +59,7 @@ func main() {
 			_, err := postedUser.CheckAuth()
 			user = postedUser
 			if err != nil {
-				r.JSON(200, map[string]interface{}{"response": "wrong login/password"})
+				r.JSON(400, map[string]interface{}{"response": "wrong login/password"})
 				return
 			} else {
 				err := sessionauth.AuthenticateSession(session, &user)
