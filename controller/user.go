@@ -94,10 +94,8 @@ func (u *UserAuth) CheckAuth() (string, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	//if u.UserLogin == admin && u.PassHash == pass {
 	if u.PassHash == user.PassHash {
-		//u.Name = user.Name
-		u = &user
+		*u = user
 		return "", nil
 	}
 	return "", errors.New("Wrong pass/login")

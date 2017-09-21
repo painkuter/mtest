@@ -5,6 +5,7 @@ import (
 	"mtest/controller"
 	"net/http"
 
+	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"

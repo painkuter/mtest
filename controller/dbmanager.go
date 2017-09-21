@@ -8,7 +8,6 @@ import (
 
 	"database/sql"
 	"io/ioutil"
-	"mtest/common/errors"
 )
 
 const (
@@ -17,6 +16,16 @@ const (
 	connect3 = "root@tcp(127.0.0.1:3306)/"
 	connect4 = "root:111@localhost/"
 )
+
+var connections = []string{
+	"test",
+	"root:111@tcp(127.0.0.1:3306)/",
+	"root:12345678@tcp(127.0.0.1:3306)/",
+	"root@tcp(127.0.0.1:3306)/",
+	"root:111@localhost/",
+}
+
+//var connections = []string{connect1, connect2, connect3, connect4}
 
 // Set and test connection
 // Execute mysql dump
@@ -69,7 +78,7 @@ func initDb() *gorp.DbMap {
 		fmt.Println("Empty table pointer")
 	}
 	//table.AddIndex("user_id_uindex", "Btree", []string{"UserLogin"}).SetUnique(true)
-	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", UserLogin: "admin", PassHash: "1234"})
+	err = dbmap.Insert(&UserAuth{Name: "TestName", LastAccess: "yesterday", Email: "@test", UserLogin: "admin", PassHash: "1234"})
 	//err = dbmap.Insert(&UserAuth{Name: "TestName2", LastAccess: "yesterday", UserLogin: "Login2"})
 	if err != nil {
 		fmt.Println("ERROR: try insert: ", err.Error())
@@ -88,50 +97,28 @@ func initDb() *gorp.DbMap {
 
 func createAndOpen(dbNname string) (*sql.DB, error) {
 	var (
-		dbConnect string
-		db        *sql.DB
-		err       error
+		//dbConnect string
+		db  *sql.DB
+		err error
 	)
-	connections := []string{connect1, connect2, connect3, connect4}
+	//connections := []string{connect1, connect2, connect3, connect4}
 	for _, el := range connections {
 		db, err = sql.Open("mysql", el)
-		if err == nil {
-			fmt.Println("CONNECTED TO DB-SERVER " + el)
-			dbConnect = el
+		result, _ := db.Exec("CREATE DATABASE IF NOT EXISTS " + dbNname)
+		db, err = sql.Open("mysql", el+dbNname)
+		if result != nil {
+			fmt.Println("CONNECTED TO DB-SERVER: " + el)
 			break
 		}
-	}
-	if err != nil {
-		return nil, errors.Wrap(err, "ERROR no connection")
-	}
 
-	// defer db.Close()
-	fmt.Println("Creating database if not exists")
-	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS " + dbNname)
-	if err != nil {
-		fmt.Printf("ERROR creating db: %s", err)
-		err = nil
-		// panic(err)
 	}
-	db.Close()
-	fmt.Println("Update connect -> directly use selected database " + dbConnect)
-	db, err = sql.Open("mysql", dbConnect+dbNname)
 	if err != nil {
-		fmt.Printf("ERROR openning new connection to database: %s", err)
-		// panic(err)
-	}
-	/*
-		if _, err := db.Exec("SET FOREIGN_KEY_CHECKS=0"); err != nil {
-			return nil, errors.Wrapf(err, "Error setting fk")
-		}*/
-	if err != nil {
-		//fmt.Println(err)
-		fmt.Println("Initialization finished with errors")
+		fmt.Println("Initialization finished with errors:")
+		fmt.Println(err)
 	} else {
 		fmt.Println("Initialization finished successfully")
 	}
 
-	//db.Exec("SET FOREIGN_KEY_CHECKS=1")
 	// defer db.Close()
 	return db, err
 }
