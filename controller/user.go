@@ -8,12 +8,10 @@ import (
 
 	"github.com/go-gorp/gorp"
 	"github.com/martini-contrib/sessionauth"
+	"time"
 )
 
 const (
-	admin       = "admin"
-	pass        = "1234"
-	name        = "Istribitelko"
 	id          = 272
 	last_access = "yesterday"
 )
@@ -56,8 +54,12 @@ func (u *UserAuth) Login() {
 	// Add to logged-in user's list
 	// etc ...
 	u.LastAccess = last_access
+	DB.Update(&UserAuth{
+		ID:         u.ID,
+		LastAccess: time.Now().String(), //TODO: fix it!
+	})
 	//u.Name = name
-	u.ID = id
+	//u.ID = id
 	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
 	u.authenticated = true
 }
@@ -69,17 +71,11 @@ func (u *UserAuth) Logout() {
 }
 
 func (u *UserAuth) GetById(id interface{}) error {
-	//if id != 1 {
-	//	return errors.New("No ID")
-	//}
 	return nil
 }
 
 func (u *UserAuth) IsAuthenticated() bool {
-	fmt.Print("USER: ")
-	fmt.Println(u)
 	return u.authenticated
-	//return true
 }
 
 func (u *UserAuth) UniqueId() interface{} {

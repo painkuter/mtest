@@ -1,17 +1,16 @@
 package main
 
 import (
-	//"html/template"
 	"mtest/controller"
 	"net/http"
 
-	"fmt"
+	"mtest/common/errors"
+
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
-	"mtest/common/errors"
 )
 
 func main() {

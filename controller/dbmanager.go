@@ -10,13 +10,6 @@ import (
 	"io/ioutil"
 )
 
-const (
-	connect2 = "root:12345678@tcp(127.0.0.1:3306)/"
-	connect1 = "root:111@tcp(127.0.0.1:3306)/"
-	connect3 = "root@tcp(127.0.0.1:3306)/"
-	connect4 = "root:111@localhost/"
-)
-
 var connections = []string{
 	"test",
 	"root:111@tcp(127.0.0.1:3306)/",

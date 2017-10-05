@@ -8,6 +8,7 @@ use \r\n
 
 [BACK]
 -
+* Squirrel and ToMap()
 * Add indexes and keys +
 * Add queryBuilder
 
