@@ -24,9 +24,35 @@ var connections = []string{
 // Execute mysql dump
 // Setup structs
 
-var DB = initDb()
+var DB = Database{
+	initDb(),
+}
 
-func TestGorp() *gorp.DbMap {
+type Database struct {
+	*gorp.DbMap
+}
+
+type Tosql interface {
+	ToSql() (string, []interface{}, error)
+}
+
+func (this Database) Execute(qb Tosql) (interface{}, error) {
+	//switch b := qb.(type) {
+	//case squirrel.UpdateBuilder:
+	//	{
+	//		sql, args, err := b.ToSql()
+	//	}
+	//}
+	//sql, args, err := qb.ToSql()
+	sql, args, err := qb.ToSql()
+	if err != nil {
+		return nil, err
+	}
+	//return nil, err
+	return this.Db.Exec(sql, args...)
+}
+
+func TestGorp() /**gorp.DbMap*/ Database {
 	return DB
 	//getMySQL()
 }

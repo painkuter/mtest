@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	db := controller.TestGorp()
+	//db := controller.TestGorp()
 	m := martini.Classic()
 	store := sessions.NewCookieStore([]byte("secret123"))
 	store.Options(sessions.Options{
@@ -78,7 +78,7 @@ func main() {
 				r.JSON(400, errors.New("Wrong login/password"))
 				return
 			}
-			err := newUser.SaveUser(db)
+			err := newUser.SaveUser()
 			if err != nil {
 				r.JSON(200, err)
 			}

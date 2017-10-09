@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-gorp/gorp"
-	"github.com/martini-contrib/sessionauth"
 	"time"
+
+	"github.com/martini-contrib/sessionauth"
+	"github.com/painkuter/sq"
 )
 
 const (
@@ -33,9 +34,9 @@ type UserSignUp struct {
 	PassHash string `form:"pass"`
 }
 
-func (u UserSignUp) SaveUser(db *gorp.DbMap) error {
+func (u UserSignUp) SaveUser() error {
 	fmt.Println("Saving user")
-	err := db.Insert(&UserAuth{
+	err := DB.Insert(&UserAuth{
 		UserLogin: u.Login,
 		PassHash:  u.PassHash,
 		//	CreatedAt: time.Now(),
@@ -54,10 +55,20 @@ func (u *UserAuth) Login() {
 	// Add to logged-in user's list
 	// etc ...
 	u.LastAccess = last_access
-	DB.Update(&UserAuth{
-		ID:         u.ID,
-		LastAccess: time.Now().String(), //TODO: fix it!
-	})
+
+	qb := squirrel.Update("user").
+		SetMap(squirrel.Eq{"LastAccess": time.Now().String()}).
+		Where(squirrel.Eq{"id_user": u.ID})
+
+		//	str, arg,_ := qb.ToSql()
+	_, err := DB.Execute(qb)
+
+	//_, err := DB.Exec(qb.Exec())
+	fmt.Println(err)
+	//DB.Update(&UserAuth{
+	//	ID:         u.ID,
+	//	LastAccess: time.Now().String(), //TODO: fix it!
+	//})
 	//u.Name = name
 	//u.ID = id
 	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
