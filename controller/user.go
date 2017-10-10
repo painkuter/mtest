@@ -12,10 +12,6 @@ import (
 	"github.com/painkuter/sq"
 )
 
-const (
-	last_access = "yesterday"
-)
-
 type UserAuth struct {
 	ID        int    `form:"id" db:"id_user,primarykey,autoincrement"`
 	UserLogin string `form:"login" db:",size:50"`
@@ -50,6 +46,9 @@ func GenerateAnonymousUser() sessionauth.User {
 
 func (u *UserAuth) Login() {
 	fmt.Println("LOGIN")
+	if u.authenticated {
+		return
+	}
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
@@ -74,6 +73,11 @@ func (u *UserAuth) Logout() {
 }
 
 func (u *UserAuth) GetById(id interface{}) error {
+	fmt.Println("GetByID")
+	err := DB.SelectOne(u, "SELECT * FROM user WHERE id_user = ?", id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

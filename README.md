@@ -8,9 +8,10 @@ use \r\n
 
 [BACK]
 -
+* User page
 * Squirrel and ToMap()
 * Add indexes and keys +
-* Add queryBuilder
+* Add queryBuilder +/-
 
 LOGGING
 * -logging with string number ->

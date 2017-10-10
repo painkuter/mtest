@@ -6,6 +6,8 @@ import (
 
 	"mtest/common/errors"
 
+	"fmt"
+
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
@@ -89,7 +91,12 @@ func main() {
 		r.HTML(200, "private", user.(*controller.UserAuth))
 	})
 	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
-		r.HTML(200, "user", user.(*controller.UserAuth))
+		u, ok := user.(*controller.UserAuth)
+		if !ok{
+			fmt.Println("no UserAuth")
+		}
+		fmt.Println(user)
+		r.HTML(200, "user", u)
 	})
 	m.Get("/logout", sessionauth.LoginRequired, func(session sessions.Session, user sessionauth.User, r render.Render) {
 		sessionauth.Logout(session, user)
@@ -98,6 +105,15 @@ func main() {
 	m.NotFound(func(r render.Render) {
 		// handle 404
 		r.HTML(404, "errors/404", nil)
+	})
+	m.Get("/auth", func(r render.Render) {
+		r.HTML(403, "errors/403", nil)
+	})
+	m.Get("/400", func(r render.Render) {
+		r.HTML(400, "errors/400", nil)
+	})
+	m.Get("/500", func(r render.Render) {
+		r.HTML(500, "errors/500", nil)
 	})
 	m.RunOnAddr(":8088")
 }

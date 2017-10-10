@@ -1,4 +1,9 @@
 <style>
+    @font-face {
+        font-family: "Rock Salt";
+        src: url(/fonts/RockSalt.ttf) format("truetype");
+    }
+
     #Houston {
         position: fixed;
         bottom: 0;
@@ -6,12 +11,22 @@
 
     #problem {
         position: fixed;
-        bottom: 155px;
-        left: 420px;
+        bottom: 150px;
+        left: 400px;
         font-family: 'Rock Salt', cursive;
     }
 
+    #error {
+        display: block;
+        text-align: center;
+        margin-top: 15%;
+        font-family: "Rock Salt";
+        font-size: 48px;
+        color: #ba0e00;
+    }
 
 </style>
-<img id="Houston" src="/img/Houston.png">
-<div id="problem"> Houston, we have a problem </div>
+<div>
+    <img id="Houston" src="/img/Houston.png">
+    <div id="problem"> Houston, we have a problem</div>
+</div>
