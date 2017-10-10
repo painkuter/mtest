@@ -1,12 +1,16 @@
 package main
 
 import (
+	"io/ioutil"
+	"math/rand"
 	"mtest/controller"
 	"net/http"
-
-	"mtest/common/errors"
+	"strconv"
 
 	"fmt"
+	"mtest/common/errors"
+
+	"time"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -92,7 +96,7 @@ func main() {
 	})
 	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		u, ok := user.(*controller.UserAuth)
-		if !ok{
+		if !ok {
 			fmt.Println("no UserAuth")
 		}
 		fmt.Println(user)
@@ -114,6 +118,35 @@ func main() {
 	})
 	m.Get("/500", func(r render.Render) {
 		r.HTML(500, "errors/500", nil)
+	})
+	m.Post("/photobooth/upload.php",
+		func(r render.Render, req *http.Request) {
+			b := req.Body
+			buf, err := ioutil.ReadAll(b)
+			//TODO: add error handling
+			fmt.Println(err)
+			fmt.Println(buf)
+
+			// generating random int name
+			now := time.Now().UnixNano()
+			source := rand.NewSource(now)
+			randomizer := rand.New(source)
+			rInt := randomizer.Int()
+
+			err = ioutil.WriteFile("public/photobooth/"+strconv.Itoa(rInt)+".jpg", buf, 0644)
+			fmt.Println(err)
+
+			r.JSON(200, map[string]interface{}{"response": "ok"})
+		})
+	m.Get("/photobooth/browse",
+		func(r render.Render, req *http.Request) {
+			type browse struct {
+				Files []string `json:"files"`
+			}
+			r.JSON(200, browse{Files: []string{"name"}})
+		})
+	m.Get("/418", func(r render.Render) {
+		r.HTML(418, "errors/418", nil) //		return 418, "i'm a teapot" // HTTP 418 : "i'm a teapot"
 	})
 	m.RunOnAddr(":8088")
 }
