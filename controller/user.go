@@ -13,7 +13,6 @@ import (
 )
 
 const (
-	id          = 272
 	last_access = "yesterday"
 )
 
@@ -54,23 +53,16 @@ func (u *UserAuth) Login() {
 	// Update last login time
 	// Add to logged-in user's list
 	// etc ...
-	u.LastAccess = last_access
+	//u.LastAccess = last_access
 
 	qb := squirrel.Update("user").
-		SetMap(squirrel.Eq{"LastAccess": time.Now().String()}).
+		SetMap(squirrel.Eq{"LastAccess": time.Now().String()}). //TODO: fix it!
 		Where(squirrel.Eq{"id_user": u.ID})
 
-		//	str, arg,_ := qb.ToSql()
 	_, err := DB.Execute(qb)
 
-	//_, err := DB.Exec(qb.Exec())
 	fmt.Println(err)
-	//DB.Update(&UserAuth{
-	//	ID:         u.ID,
-	//	LastAccess: time.Now().String(), //TODO: fix it!
-	//})
-	//u.Name = name
-	//u.ID = id
+
 	fmt.Println("Logged in user " + strconv.Itoa(u.ID))
 	u.authenticated = true
 }
