@@ -4,8 +4,8 @@ $(document).ready(function(){
 		photos = $('#photos'),
 		screen =  $('#screen');
 
-	var template = '<a href="uploads/original/{src}" rel="cam" '
-		+'style="background-image:url(uploads/thumbs/{src})"></a>';
+	var template = '<a href="uploads/new/{src}" rel="cam" '
+		+'style="background-image:url(uploads/new/{src})"></a>';
 
 	/*----------------------------------
 		Setting up the web camera
@@ -14,7 +14,7 @@ $(document).ready(function(){
 
 	webcam.set_swf_url('assets/webcam/webcam.swf');
 	webcam.set_api_url('upload');	// The upload script
-	webcam.set_quality(80);				// JPEG Photo Quality
+	webcam.set_quality(100);				// JPEG Photo Quality
 	webcam.set_shutter_sound(true, 'assets/webcam/shutter.mp3');
 
 	// Generating the embed code and adding it to the page:	

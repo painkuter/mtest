@@ -28,7 +28,7 @@ window.webcam = {
 	shutter_url: 'shutter.mp3', // URI to shutter.mp3 sound
 	api_url: '', // URL to upload script
 	loaded: false, // true when webcam movie finishes loading
-	quality: 90, // JPEG quality (1 - 100)
+	quality: 100, // JPEG quality (1 - 100)
 	shutter_sound: true, // shutter sound effect on/off
 	stealth: false, // stealth mode (do not freeze image upon capture)
 	hooks: {

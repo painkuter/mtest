@@ -1,46 +1,26 @@
 package main
 
 import (
-	"io/ioutil"
-	"math/rand"
-	"mtest/controller"
-	"net/http"
-	"os"
-
-	"mtest/common/errors"
-	"strconv"
-
 	"fmt"
-	"mtest/common/errors"
-
+	"io/ioutil"
+	"log"
+	"math/rand"
+	"net/http"
+	"strconv"
 	"time"
 
-	"log"
+	"mtest/common/errors"
+	"mtest/controller"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
-	"time"
-	"strconv"
 )
 
 func main() {
-	// Logging
-	y,month,d := time.Now().Date()
-	logName := strconv.Itoa(y)+ "_" + month.String() + "_"+ strconv.Itoa(d)
-	f, err := os.OpenFile("logs/log_" + logName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		fmt.Printf("error opening file: %v", err)
-		os.Exit(1)
-	}
-	defer f.Close()
-
-	//log.SetOutput(f)
-	log.SetOutput(os.Stdout)
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.Printf("********APP STARTED********")
+	controller.InitLogging()
 
 	// Start martini
 	//db := controller.TestGorp()
@@ -142,13 +122,13 @@ func main() {
 	m.Get("/500", func(r render.Render) {
 		r.HTML(500, "errors/500", nil)
 	})
-	m.Post("/photobooth/upload.php",
+	m.Post("/photobooth/upload",
 		func(r render.Render, req *http.Request) {
 			b := req.Body
 			buf, err := ioutil.ReadAll(b)
 			//TODO: add error handling
-			fmt.Println(err)
-			fmt.Println(buf)
+			log.Println(err)
+			//fmt.Println(buf)
 
 			// generating random int name
 			now := time.Now().UnixNano()
@@ -156,20 +136,31 @@ func main() {
 			randomizer := rand.New(source)
 			rInt := randomizer.Int()
 
-			err = ioutil.WriteFile("public/photobooth/"+strconv.Itoa(rInt)+".jpg", buf, 0644)
+			err = ioutil.WriteFile("public/photobooth/uploads/new/"+strconv.Itoa(rInt)+".jpg", buf, 0644)
 			fmt.Println(err)
 
 			r.JSON(200, map[string]interface{}{"response": "ok"})
 		})
 	m.Get("/photobooth/browse",
 		func(r render.Render, req *http.Request) {
+			files, err := ioutil.ReadDir("public/photobooth/uploads/new/")
+			if err != nil {
+				log.Println(err)
+			}
 			type browse struct {
 				Files []string `json:"files"`
 			}
-			r.JSON(200, browse{Files: []string{"name"}})
+			var fileList browse
+			for _, f := range files {
+				fileList.Files = append(fileList.Files, f.Name())
+
+			}
+			fmt.Println(fileList)
+
+			r.JSON(200, fileList)
 		})
 	m.Get("/418", func(r render.Render) {
-		r.HTML(418, "errors/418", nil) //		return 418, "i'm a teapot" // HTTP 418 : "i'm a teapot"
+		r.HTML(418, "errors/418", nil)
 	})
 	m.RunOnAddr(":8088")
 }
