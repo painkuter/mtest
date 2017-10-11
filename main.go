@@ -3,19 +3,40 @@ package main
 import (
 	"mtest/controller"
 	"net/http"
+	"os"
 
 	"mtest/common/errors"
 
 	"fmt"
+
+	"log"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
+	"time"
+	"strconv"
 )
 
 func main() {
+	// Logging
+	y,month,d := time.Now().Date()
+	logName := strconv.Itoa(y)+ "_" + month.String() + "_"+ strconv.Itoa(d)
+	f, err := os.OpenFile("logs/log_" + logName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("error opening file: %v", err)
+		os.Exit(1)
+	}
+	defer f.Close()
+
+	//log.SetOutput(f)
+	log.SetOutput(os.Stdout)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.Printf("********APP STARTED********")
+
+	// Start martini
 	//db := controller.TestGorp()
 	m := martini.Classic()
 	store := sessions.NewCookieStore([]byte("secret123"))
@@ -92,7 +113,7 @@ func main() {
 	})
 	m.Get("/user", sessionauth.LoginRequired, func(r render.Render, user sessionauth.User) {
 		u, ok := user.(*controller.UserAuth)
-		if !ok{
+		if !ok {
 			fmt.Println("no UserAuth")
 		}
 		fmt.Println(user)
