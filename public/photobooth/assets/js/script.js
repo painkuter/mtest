@@ -104,7 +104,6 @@ $(document).ready(function(){
 		// This response is returned by upload.php
 		// and it holds the name of the image in a
 		// JSON object format:
-		alert(msg);
 		msg = $.parseJSON(msg);
 		
 		if(msg.error){

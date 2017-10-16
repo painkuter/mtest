@@ -122,12 +122,17 @@ func main() {
 	m.Get("/500", func(r render.Render) {
 		r.HTML(500, "errors/500", nil)
 	})
+	m.Get("/photobooth", func(r render.Render, user sessionauth.User) {
+		r.HTML(200, "photobooth", nil)
+	})
 	m.Post("/photobooth/upload",
 		func(r render.Render, req *http.Request) {
 			b := req.Body
 			buf, err := ioutil.ReadAll(b)
 			//TODO: add error handling
-			log.Println(err)
+			if err != nil {
+				log.Println(err)
+			}
 			//fmt.Println(buf)
 
 			// generating random int name
@@ -135,11 +140,17 @@ func main() {
 			source := rand.NewSource(now)
 			randomizer := rand.New(source)
 			rInt := randomizer.Int()
-
-			err = ioutil.WriteFile("public/photobooth/uploads/new/"+strconv.Itoa(rInt)+".jpg", buf, 0644)
-			fmt.Println(err)
-
-			r.JSON(200, map[string]interface{}{"response": "ok"})
+			filename := strconv.Itoa(rInt) + ".jpg"
+			err = ioutil.WriteFile("public/photobooth/uploads/new/"+filename, buf, 0644)
+			if err != nil {
+				log.Println(err)
+			}
+			//echo '{"status":1,"message":"Success!","filename":"'.$filename.'"}';
+			r.JSON(200, map[string]interface{}{
+				"status":   1,
+				"message":  "Success!",
+				"filename": filename,
+			})
 		})
 	m.Get("/photobooth/browse",
 		func(r render.Render, req *http.Request) {

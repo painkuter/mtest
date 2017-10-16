@@ -1,4 +1,4 @@
-*{
+/**{
 	margin:0;
 	padding:0;
 }
@@ -11,7 +11,7 @@ html{
 body{
 	font:14px/1.3 'Segoe UI',Arial, sans-serif;
 	color:#888;
-}
+}*/
 
 
 /*--------------------------
@@ -23,12 +23,8 @@ h1,h2{
 	color: #fff;
 	line-height: 1;
 	background-color: #222222;
-	font-family: 'Segoe UI Light','Segoe UI',Arial,sans-serif;
+	/*font-family: 'Segoe UI Light','Segoe UI',Arial,sans-serif;*/
 	font-weight: normal;
-	margin: 0 auto;
-	position: absolute;
-	left: 50%;
-	margin-left: -446px;
 }
 
 h1{
@@ -44,7 +40,7 @@ h2{
 }
 
 #topBar{
-	background:url('../img/top_bar_bg.jpg') repeat-x;
+	/*background:url('../img/top_bar_bg.jpg') repeat-x;*/
 	height:163px;
 }
 
