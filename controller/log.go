@@ -19,8 +19,15 @@ func InitLogging() {
 	}
 	defer f.Close()
 
+	//Log to file:
 	//log.SetOutput(f)
+
+	//Log to console:
 	log.SetOutput(os.Stdout)
+
+	//Log both ways
+	//log.SetOutput(io.MultiWriter(f, os.Stdout))
+
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Printf("********APP STARTED********")
 }
